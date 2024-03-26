@@ -1,6 +1,7 @@
 package westview.ds;
 
 import java.io.File;
+
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,23 +45,31 @@ public class DriverHashmaps {
 		
 		//Get the scanner going to read the csv file
 		//which should be outside the src folder
-		HashMap covidData = new HashMap<String, HashMap<String, Integer>>();
+		HashMap covidData = new HashMap<HashMap<String, String>, HashMap<String, Integer>>();
+		HashMap covidCityData = new HashMap<String,Integer>(); 
 		try {
 			File f = new File("covid417.csv");
 			Scanner s = new Scanner(f);
 			s.nextLine();
+			HashMap cityData = new HashMap<String, Integer>();
 			while (s.hasNext()) {
 				String[] row = s.nextLine().split(",");
 				String city = row[0];
 				String state = row[1];
 				String cases = row[2];
 				int nCases = Integer.parseInt(cases);
-				HashMap cityData = new HashMap<String, Integer>();
-				cityData.put(city, nCases);
-				covidData.put(state,cityData);
+				HashMap x = new HashMap<String, String>();
+				HashMap y = new HashMap<String,Integer>();
+				x.put(state,city);
+				y.put(city,nCases);
+				covidData.put(x,y);
 			
 			}
+			//check to return a value for cases
 			System.out.println(covidData.size());
+			
+			//try to get the sum of all cases for California
+			
 			
 			s.close();
 		} catch (Exception e) {
