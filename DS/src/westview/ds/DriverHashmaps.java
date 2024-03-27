@@ -7,10 +7,52 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class DriverHashmaps {
 
+
+public class DriverHashmaps {
+	private static HashMap<HashMap<String, String>, HashMap<String, Integer>> covidData = new HashMap<HashMap<String, String>, HashMap<String, Integer>>();
+	private static ArrayList<String> cities = new ArrayList<String>();
+	private static ArrayList<String> states = new ArrayList<String>();
+	
 	public DriverHashmaps() {
 		// TODO Auto-generated constructor stub
+		try {
+			File f = new File("covid417.csv");
+			Scanner s = new Scanner(f);
+			s.nextLine();
+			HashMap cityData = new HashMap<String, Integer>();
+			while (s.hasNext()) {
+				String[] row = s.nextLine().split(",");
+				String city = row[0];
+				String state = row[1];
+				String cases = row[2];
+				cities.add(city);
+				states.add(state);
+				int nCases = Integer.parseInt(cases);
+				HashMap<String, String> x = new HashMap<String, String>();
+				HashMap<String,Integer> y = new HashMap<String,Integer>();
+				x.put(state,city);
+				y.put(city,nCases);
+				covidData.put(x,y);
+			
+			}
+			//check to return a value for cases + check to see if the covidData includes all of the values
+			System.out.println(covidData.size());
+			System.out.println(covidData.keySet());
+			
+			//try to get the sum of all cases for California
+			System.out.println(covidData.get("California"));
+			
+			System.out.println(covidData.values());
+			
+			//try to get the cases for San Diego
+			//getCityData("San Diego", "California");
+			
+			
+			s.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 	}
 
 	public static void main(String[] args) throws FileNotFoundException {
@@ -45,38 +87,19 @@ public class DriverHashmaps {
 		
 		//Get the scanner going to read the csv file
 		//which should be outside the src folder
-		HashMap covidData = new HashMap<HashMap<String, String>, HashMap<String, Integer>>();
-		HashMap covidCityData = new HashMap<String,Integer>(); 
-		try {
-			File f = new File("covid417.csv");
-			Scanner s = new Scanner(f);
-			s.nextLine();
-			HashMap cityData = new HashMap<String, Integer>();
-			while (s.hasNext()) {
-				String[] row = s.nextLine().split(",");
-				String city = row[0];
-				String state = row[1];
-				String cases = row[2];
-				int nCases = Integer.parseInt(cases);
-				HashMap x = new HashMap<String, String>();
-				HashMap y = new HashMap<String,Integer>();
-				x.put(state,city);
-				y.put(city,nCases);
-				covidData.put(x,y);
-			
-			}
-			//check to return a value for cases
-			System.out.println(covidData.size());
-			
-			//try to get the sum of all cases for California
-			
-			
-			s.close();
-		} catch (Exception e) {
-			System.out.println(e);
-		}
+		DriverHashmaps d = new DriverHashmaps();
+		d.getStateCases();
+		
 		
 		
 	}
-
+	public int getStateCases() {
+		int sum = 0;
+		HashMap<String, String> temp = new HashMap<String, String>();
+		//temp = (HashMap<String, String>) covidData.keySet();
+		System.out.println(covidData.keySet().size());
+		
+		
+		return sum;
+	}
 }
