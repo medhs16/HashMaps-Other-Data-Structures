@@ -4,46 +4,41 @@ import java.io.File;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.Set;
 
 
 
 public class DriverHashmaps {
-	private static HashMap<HashMap<String, String>, HashMap<String, Integer>> covidData = new HashMap<HashMap<String, String>, HashMap<String, Integer>>();
-	private static ArrayList<String> cities = new ArrayList<String>();
-	private static ArrayList<String> states = new ArrayList<String>();
-	
+	private static HashMap<String, HashMap<String, Integer>> covidData = new HashMap<String,HashMap<String, Integer>>();	
 	public DriverHashmaps() {
 		// TODO Auto-generated constructor stub
 		try {
 			File f = new File("covid417.csv");
 			Scanner s = new Scanner(f);
 			s.nextLine();
-			HashMap cityData = new HashMap<String, Integer>();
 			while (s.hasNext()) {
 				String[] row = s.nextLine().split(",");
-				String city = row[0];
-				String state = row[1];
+				String city = row[0].toLowerCase();
+				String state = row[1].toLowerCase();
 				String cases = row[2];
-				cities.add(city);
-				states.add(state);
 				int nCases = Integer.parseInt(cases);
-				HashMap<String, String> x = new HashMap<String, String>();
 				HashMap<String,Integer> y = new HashMap<String,Integer>();
-				x.put(state,city);
 				y.put(city,nCases);
-				covidData.put(x,y);
+				if (covidData.containsKey(state)) {
+					covidData.get(state).put(city, nCases);
+				}
+				else {
+					covidData.put(state, y);
+				}
 			
 			}
 			//check to return a value for cases + check to see if the covidData includes all of the values
-			System.out.println(covidData.size());
-			System.out.println(covidData.keySet());
+			//System.out.println(covidData.size());
 			
 			//try to get the sum of all cases for California
-			System.out.println(covidData.get("California"));
-			
-			System.out.println(covidData.values());
 			
 			//try to get the cases for San Diego
 			//getCityData("San Diego", "California");
@@ -88,18 +83,44 @@ public class DriverHashmaps {
 		//Get the scanner going to read the csv file
 		//which should be outside the src folder
 		DriverHashmaps d = new DriverHashmaps();
-		d.getStateCases();
+		
+		//method for calculating the cases afflicted in the state/city chosen
+		int sSum = 0;//initial store for the state data
+		int cSum = 0; //initial store for the city data
+		HashMap<String, Integer> temp = new HashMap<String, Integer>();//store the HashMap in the HashMap
+		Scanner userInput = new Scanner(System.in);
+		while (true) {
+			System.out.println("Enter a state: ");
+			String s = userInput.nextLine().toLowerCase();
+			temp = covidData.get(s);
+			if (temp == null) {
+				System.out.println("not a real place. please input a real place");
+				System.out.println("Enter a state: ");
+				s = userInput.nextLine().toLowerCase();
+				temp = covidData.get(s);
+			}
+			Collection<Integer> t = temp.values();
+			Object[] ints = t.toArray();
+			for (int i = 0; i < temp.size(); i++) {
+				sSum+= (int) ints[i];
+			}
+			
+			System.out.println("The total cases in the state of " + s + " is " +sSum);
+			System.out.println();
+			System.out.print("Enter a city: ");
+			String c = userInput.nextLine().toLowerCase();
+			if (covidData.get(s).get(c) == null) {
+				System.out.println("not a real place. please input a real place");
+				System.out.println("Enter a city: ");
+				c = userInput.nextLine().toLowerCase();
+			}
+			cSum = (int) temp.get(c);
+			System.out.println("The total cases in the city of " + c + " is " +cSum);
+			System.out.println();
+			System.out.println();
+		}
 		
 		
 		
-	}
-	public int getStateCases() {
-		int sum = 0;
-		HashMap<String, String> temp = new HashMap<String, String>();
-		//temp = (HashMap<String, String>) covidData.keySet();
-		System.out.println(covidData.keySet().size());
-		
-		
-		return sum;
 	}
 }
